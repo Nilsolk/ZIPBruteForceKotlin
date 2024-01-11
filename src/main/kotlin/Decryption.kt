@@ -1,6 +1,7 @@
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import kotlin.random.Random
+import kotlin.system.exitProcess
 
 class Decryption(
     private val communication: Communication,
@@ -24,11 +25,20 @@ class Decryption(
             zipFile.extractAll(destinationDir)
             println("Файлы успешно извлечены.")
         } catch (e: ZipException) {
-            when (e.type) {
-                ZipException.Type.WRONG_PASSWORD -> extractFilesFromEncryptedZip(zipFilePath, destinationDir)
-                ZipException.Type.FILE_NOT_FOUND -> {
+            handleException(e, zipFilePath, destinationDir)
+        }
+    }
 
-                }
+    private fun handleException(exception: ZipException, zipFilePath: String, destinationDir: String) {
+        when (exception.type) {
+            ZipException.Type.WRONG_PASSWORD -> extractFilesFromEncryptedZip(zipFilePath, destinationDir)
+            ZipException.Type.FILE_NOT_FOUND -> {
+                println("wrong path to zip archive, please try again")
+                exitProcess(1)
+            }
+
+            else -> {
+                println("something went wrong,try again")
             }
         }
     }
@@ -39,9 +49,9 @@ class PasswordFinder {
         val stringBuilder = StringBuilder()
         for (i in 0..length) {
             stringBuilder.append(alphabet[Random.nextInt(0, alphabet.length - 1)])
-            if (check(stringBuilder.toString(), list)) {
-                find(alphabet, length, list)
-            }
+        }
+        if (check(stringBuilder.toString(), list)) {
+            find(alphabet, length, list)
         }
         return stringBuilder.toString()
     }
@@ -49,9 +59,5 @@ class PasswordFinder {
     private fun check(newPassword: String, list: MutableList<String>): Boolean = list.equals(newPassword)
 }
 
-class Handler {
-    fun handleException() {
 
-    }
-}
 

@@ -1,11 +1,8 @@
-class Main {
-    fun start() {
-
-    }
-}
-
 class Communication {
+
+
     fun chooseAlphabet(): Boolean {
+        println("If you want use inner characters type y, else type n")
         val userChoice = readln()
         return when (userChoice) {
             "y" -> true
@@ -18,6 +15,7 @@ class Communication {
     }
 
     fun getLength(): Int {
+        println("Enter length of password")
         val length = readln()
         return try {
             length.toInt()
@@ -27,13 +25,13 @@ class Communication {
         }
     }
 
-    fun getPath(): String {
+    fun getPath(str: String): String {
         val path = readln()
         if (path.isEmpty()) {
             println("Empty directory, try again")
-            getPath()
+            getPath(str)
         }
         return path
     }
-}
 
+}
