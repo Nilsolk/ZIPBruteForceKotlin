@@ -4,7 +4,8 @@ import java.io.File
 
 
 class Decryption(
-    private val communication: Communication, private val finder: PasswordFinder
+    communication: Communication,
+    private val finder: PasswordFinder
 ) {
     private val passwordLength = communication.getLength()
     private val letters: CharArray = when (communication.chooseAlphabet()) {
@@ -15,13 +16,16 @@ class Decryption(
         }
     }
 
-    fun isPasswordCorrect(rarFilePath: String, initialPassword: String = String(CharArray(passwordLength) { letters[0] })) {
+    fun isPasswordCorrect(
+        rarFilePath: String, initialPassword: String = String(CharArray(passwordLength) { letters[0] })
+    ) {
         var password = initialPassword
         while (true) {
             println(password)
             try {
                 val file = File(rarFilePath)
                 val document = PDDocument.load(file, password)
+                println("Ваш пароль -> $password")
                 println("PDF-файл открыт успешно.")
                 document.close()
                 break
