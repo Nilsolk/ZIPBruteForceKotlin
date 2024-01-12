@@ -11,8 +11,8 @@ repositories {
 
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("net.lingala.zip4j:zip4j:2.11.3")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-io:0.1.16")
+    implementation("net.lingala.zip4j:zip4j:2.11.3")
+    implementation("com.github.junrar:junrar:7.5.5")
 
 }
 

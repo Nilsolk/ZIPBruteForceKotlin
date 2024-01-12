@@ -25,11 +25,12 @@ class Communication {
         }
     }
 
-    fun getPath(str: String): String {
+    fun getPath(): String {
+        println("Enter path to rar archive")
         val path = readln()
         if (path.isEmpty()) {
             println("Empty directory, try again")
-            getPath(str)
+            getPath()
         }
         return path
     }

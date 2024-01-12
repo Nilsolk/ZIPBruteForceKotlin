@@ -1,63 +1,42 @@
-import net.lingala.zip4j.ZipFile
-import net.lingala.zip4j.exception.ZipException
-import kotlin.random.Random
-import kotlin.system.exitProcess
+import com.github.junrar.Archive
+import com.github.junrar.exception.RarException
+import java.io.File
 
 class Decryption(
     private val communication: Communication,
     private val finder: PasswordFinder
 ) {
-    private val letters: String = when (communication.chooseAlphabet()) {
-        true -> "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    private val passwordLength = communication.getLength()
+    private val letters: CharArray = when (communication.chooseAlphabet()) {
+        true -> "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         //`~!@#$%^&*()_\\-+=[{]}|:;'\",<.>/?"
         false -> {
             println("Type your own characters below, without spaces")
-            readln()
+            readln().toCharArray()
         }
     }
 
-    private val passwordLength = communication.getLength()
-    fun extractFilesFromEncryptedZip(zipFilePath: String, destinationDir: String) {
-        val passwordList = mutableListOf<String>()
+
+    fun isPasswordCorrect(
+        rarFilePath: String,
+        password: String = String(CharArray(passwordLength) { letters[0] })
+    ) {
         try {
-            val zipFile = ZipFile(zipFilePath)
-            zipFile.setPassword(finder.find(letters, passwordLength, passwordList).toCharArray())
-            zipFile.extractAll(destinationDir)
-            println("Файлы успешно извлечены.")
-        } catch (e: ZipException) {
-            handleException(e, zipFilePath, destinationDir)
+            println(password)
+            val rarFile = File(rarFilePath)
+            val archive = Archive(rarFile, password)
+            println("Success password is -> $password")
+            archive.close()
+        } catch (e: RarException) {
+            val newPassword = finder.findCombinationOfPassword(password.toCharArray(), letters)
+            isPasswordCorrect(rarFilePath, String(newPassword))
+        } catch (e: Exception) {
+            println("something went wrong,try again" + " ${e.message}")
         }
     }
 
-    private fun handleException(exception: ZipException, zipFilePath: String, destinationDir: String) {
-        when (exception.type) {
-            ZipException.Type.WRONG_PASSWORD -> extractFilesFromEncryptedZip(zipFilePath, destinationDir)
-            ZipException.Type.FILE_NOT_FOUND -> {
-                println("wrong path to zip archive, please try again")
-                exitProcess(1)
-            }
-
-            else -> {
-                println("something went wrong,try again")
-            }
-        }
-    }
 }
 
-class PasswordFinder {
-    fun find(alphabet: String, length: Int, list: MutableList<String>): String {
-        val stringBuilder = StringBuilder()
-        for (i in 0..length) {
-            stringBuilder.append(alphabet[Random.nextInt(0, alphabet.length - 1)])
-        }
-        if (check(stringBuilder.toString(), list)) {
-            find(alphabet, length, list)
-        }
-        return stringBuilder.toString()
-    }
-
-    private fun check(newPassword: String, list: MutableList<String>): Boolean = list.equals(newPassword)
-}
 
 
 
