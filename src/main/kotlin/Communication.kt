@@ -26,7 +26,7 @@ class Communication {
     }
 
     fun getPath(): String {
-        println("Enter path to rar archive")
+        println("Enter path to your PDF file")
         val path = readln()
         if (path.isEmpty()) {
             println("Empty directory, try again")
