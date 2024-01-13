@@ -1,29 +1,22 @@
+package decryption
+
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException
+import user_service.Communication
 import java.io.File
 
 
-class Decryption(
+class PDFDecryption(
     communication: Communication,
     private val finder: PasswordFinder
-) {
-    private val passwordLength = communication.getLength()
-    private val letters: CharArray = when (communication.chooseAlphabet()) {
-        true -> "1234567890".toCharArray()
-        false -> {
-            println("Type your own characters below, without spaces")
-            readln().toCharArray()
-        }
-    }
+) : Decryption(communication) {
 
-    fun isPasswordCorrect(
-        rarFilePath: String, initialPassword: String = String(CharArray(passwordLength) { letters[0] })
-    ) {
-        var password = initialPassword
+    override fun decode() {
+        var password = String(CharArray(passwordLength) { letters[0] })
         while (true) {
             println(password)
             try {
-                val file = File(rarFilePath)
+                val file = File(path)
                 val document = PDDocument.load(file, password)
                 println("Ваш пароль -> $password")
                 println("PDF-файл открыт успешно.")

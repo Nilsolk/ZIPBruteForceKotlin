@@ -1,3 +1,5 @@
+package decryption
+
 class PasswordFinder {
     fun findCombinationOfPassword(password: CharArray, charset: CharArray): CharArray {
         var i = password.size - 1
