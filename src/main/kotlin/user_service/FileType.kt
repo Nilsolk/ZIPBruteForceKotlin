@@ -1,8 +1,6 @@
 package user_service
 
-import decryption.Decryption
-import decryption.PDFDecryption
-import decryption.PasswordFinder
+import decryption.*
 
 class DecryptionFactory(
     private val communication: Communication,
@@ -11,8 +9,8 @@ class DecryptionFactory(
     fun chooseFileType(): Decryption {
         return when (communication.getTypeOfFile()) {
             "1" -> PDFDecryption(communication, passwordFinder)
-            "2" -> PDFDecryption(communication, passwordFinder)
-            "3" -> PDFDecryption(communication, passwordFinder)
+            "2" -> ZIPDecryption(communication, passwordFinder)
+            "3" -> RARDecryption(communication, passwordFinder)
             else -> throw IllegalArgumentException()
         }
     }

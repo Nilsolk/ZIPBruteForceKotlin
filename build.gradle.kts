@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+
+    implementation("de.schlichtherle.truezip:truezip:7.7.1")
     implementation("org.apache.pdfbox:pdfbox:2.0.16")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     implementation("net.lingala.zip4j:zip4j:2.11.3")
