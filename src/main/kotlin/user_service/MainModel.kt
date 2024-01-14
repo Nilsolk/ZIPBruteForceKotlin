@@ -6,11 +6,8 @@ import kotlin.system.exitProcess
 class MainModel {
     fun start() {
         greetings()
-        val communication = Communication()
-        val passwordFinder = PasswordFinder()
-
         try {
-            val decryption = DecryptionFactory(communication, passwordFinder).chooseFileType()
+            val decryption = DecryptionFactory(Communication(), PasswordFinder()).chooseFileType()
             decryption.decode()
         } catch (e: IllegalArgumentException) {
             println("Wrong input, try again")
@@ -32,6 +29,11 @@ fun main() {
     val mainModel = MainModel()
     mainModel.start()
 }
+
+
+
+
+
 
 
 
